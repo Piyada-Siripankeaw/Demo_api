@@ -1,0 +1,19 @@
+Setting:
+    local_host: http://localhost:8082
+
+request_body:
+    valid:
+        username: doppio 
+        password: weBuildBestQa
+    invalid:
+        username: doppioinvalid 
+        password: weBuildBestQainvalid
+    invalid_null:
+        username: null
+        password: null
+
+header:
+    invalid:
+        token_random: xxxxxxxxxx
+        token_null: null
+                  
