@@ -6,10 +6,6 @@ Resource    ../keywords/get_all_asset.robot
 
 
 *** Test Cases ***
-TC-000 test return x
-    ${x}    Login Session    ${request_body}[valid][username]    ${request_body}[valid][password]    200
-    Log    ${x}[message]
-
 
 TC-001 Verify when input wrong username or password
     common.Create on Session    loginSession    ${Setting}[local_host]
