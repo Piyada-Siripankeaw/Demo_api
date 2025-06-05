@@ -2,9 +2,6 @@
 Resource    ${CURDIR}/../resources/import.robot
 Resource    ../keywords/get_all_asset.robot
 
-*** Variables ***
-
-
 *** Test Cases ***
 
 TC-001 Verify when input wrong username or password
