@@ -1,6 +1,5 @@
 *** Settings ***
 Resource    ${CURDIR}/../resources/import.robot
-Resource    ../keywords/get_all_asset.robot
 
 *** Test Cases ***
 
@@ -28,7 +27,7 @@ TC-004 login fail (invalid password)
 
 TC-005 login fail (username = null)
     ${resp_login}    login_keyword.login Session    ${request_body}[invalid_null][username]    ${request_body}[valid][password]    500
-    ${Expect_status_int}    common.Convert integer to string    ${resp_login.json()['status']}
+    ${Expect_status_int}    common.Convert data to string    ${resp_login.json()['status']}
     Log    ${Expect_status_int}
     common.Check Should be equal    ${Expect_status_int}    500
     common.Check Should be equal    ${resp_login.json()['error']}    Internal Server Error
@@ -37,7 +36,7 @@ TC-005 login fail (username = null)
 
 TC-006 login fail (password = null)
     ${resp_login}    login_keyword.login Session    ${request_body}[valid][username]    ${request_body}[invalid_null][password]    500
-    ${Expect_status_int}    common.Convert integer to string    ${resp_login.json()['status']}
+    ${Expect_status_int}    common.Convert data to string    ${resp_login.json()['status']}
     Log    ${Expect_status_int}
     common.Check Should be equal    ${Expect_status_int}    500
     common.Check Should be equal    ${resp_login.json()['error']}    Internal Server Error
@@ -57,20 +56,24 @@ TC-008 Get all asset fail (invalid token)
 TC-009 Get all asset fail {token=null}
     get_all_asset.Send service get all asset    ${header}[invalid][token_null]    401
 
+TC-010 Create new asset
+    ${resp_login}    Login_keyword.Login Session    ${request_body}[valid][username]    ${request_body}[valid][password]   200
+    create_new_asset.Send service create new asset    ${resp_login.json()['message']}    a006    macbook pro m1    1   true    200
 
-
-# TC-00X Verfiy that can get asset list from get api correctly
-#     common.Create on Session    loginSession    ${Setting}[local_host]
-#     ${request_body}    Create Dictionary    username=${request_body}[valid][username]    password=${request_body}[valid][password]
-#     ${resp}    POST On Session    loginSession    /login    json=${request_body}   expected_status=200
-#     ${token}    Set Variable    ${resp.json()['message']}
-#     Log    ${token}
-
-#     common.Create on Session    getAsset    ${Setting}[local_host]
-#     ${header}    Create Dictionary    token=${token}
-#     ${resp_asset}    GET On Session    getAsset   /assets    headers=${header}    expected_status=200
-    
-
+TC-011 Verify data index 5 (create new asset) 
+    ${resp_login}    Login_keyword.Login Session    ${request_body}[valid][username]    ${request_body}[valid][password]    200
+    ${resp_all_asset}    get_all_asset.Send service get all asset    ${resp_login.json()['message']}    200
+    ${resp_all_asset_data_from_index_assetId}    common.Get data from json by index    ${resp_all_asset.json()}    5    assetId
+    ${resp_all_asset_data_from_index_assetName}    common.Get data from json by index    ${resp_all_asset.json()}    5    assetName
+    ${resp_all_asset_data_from_index_assetType}    common.Get data from json by index    ${resp_all_asset.json()}    5    assetType
+    ${resp_all_asset_data_from_index_inUse}    common.Get data from json by index    ${resp_all_asset.json()}    5    inUse
+    common.Check Should be equal    ${resp_all_asset_data_from_index_assetId}     a006
+    common.Check Should be equal    ${resp_all_asset_data_from_index_assetName}    macbook pro m1
+    ${final_data_resp_all_asset_data_from_index_assetType}    common.Convert data to string    ${resp_all_asset_data_from_index_assetType}
+    common.Check Should be equal    ${final_data_resp_all_asset_data_from_index_assetType}    1
+    ${final_data_resp_all_asset_data_from_index_inUse}    common.Convert data to string    ${resp_all_asset_data_from_index_inUse}
+    Log    ${final_data_resp_all_asset_data_from_index_inUse} 
+    common.Check Should be equal with ignore case    ${final_data_resp_all_asset_data_from_index_inUse}    true    ignore_case=True
 
     
 

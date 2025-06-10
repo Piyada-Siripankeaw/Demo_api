@@ -1,5 +1,3 @@
-*** Settings ***
-Resource    common.robot
 *** Keywords ***
 
 Send service create new asset
