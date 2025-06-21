@@ -75,5 +75,38 @@ TC-011 Verify data index 5 (create new asset)
     Log    ${final_data_resp_all_asset_data_from_index_inUse} 
     common.Check Should be equal with ignore case    ${final_data_resp_all_asset_data_from_index_inUse}    true    ignore_case=True
 
-    
+TC_012 Delete asset
+    ${resp_login}    Login_keyword.Login Session    ${request_body}[valid][username]    ${request_body}[valid][password]    200
+    ${resp_delete}    Delete_asset.Delete asset    ${resp_login.json()['message']}    a006    200
+    common.Check Should be equal    ${resp_delete.json()['status']}    success
+    common.Check should be empty    ${resp_delete.json()['message']}
 
+TC_013 Get Assete Type
+    ${resp_all_asset}    get_asset_type.Get asset type service    200
+    ${resp_all_asset_length}    Get Length    ${resp_all_asset.json()}
+    IF    ${resp_all_asset_length} > 0
+        Log    Have data
+        FOR    ${counter}    IN RANGE    0    ${resp_all_asset_length}
+            Log    ${counter}
+            ${data_typeid}    common.Get data from json by index    ${resp_all_asset.json()}     ${counter}    typeId
+            ${data_typeName}    common.Get data from json by index    ${resp_all_asset.json()}    ${counter}   typeName
+            Log    ${data_typeid}
+            Log    ${data_typeName}
+            ${data_typeid_string}    common.Convert data to string    ${data_typeid}
+            # # สร้างตัวแปรชื่อ dynamic เช่น ${data_typeid_0}, ${data_typeName_0}
+            # ${data_typeid_counter}    Set Variable    data_type_${counter}
+            # Set Test Variable    ${data_typeid_counter}    ${data_typeid_string}
+            # ${data_typeName_counter}    Set Variable    data_name_${counter}
+            # Set Test Variable    ${data_typeName_counter}    ${data_typeName}
+            IF    ${counter} == 0
+                common.Check Should be equal    ${data_typeid_string}    1
+                common.Check Should be equal    ${data_typeName}    laptop
+            ELSE
+                common.Check Should be equal    ${data_typeid_string}    2
+                common.Check Should be equal    ${data_typeName}    mobile
+            END            
+        END
+            Log    End loop
+    ELSE
+        Log   No data
+    END
