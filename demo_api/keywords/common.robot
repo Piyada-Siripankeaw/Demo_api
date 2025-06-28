@@ -33,3 +33,12 @@ Get data from json by index
     ${resp_full_data_from_index}    Get from List    ${resp_json}    ${index}
     ${resp_data_from_index}    Get from Dictionary    ${resp_full_data_from_index}    ${field_name}
     RETURN    ${resp_data_from_index}
+
+Check json data after delete
+    [Arguments]    ${item}
+    ${resp_data_json}    Get Length    ${item}
+    RETURN    ${resp_data_json}
+
+Check should be true
+    [Arguments]    ${condition}
+    Should be true   ${condition} 
