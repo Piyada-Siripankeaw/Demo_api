@@ -1,7 +1,15 @@
 *** Settings ***
 Resource    ${CURDIR}/../resources/import.robot
 
+
 *** Test Cases ***
+TC-E2E
+    [Tags]   E2E
+    ${resp_login}   login_keyword.Login Session    ${request_body}[valid][username]    ${request_body}[valid][password]    200
+    ${resp_get_all_asset}    get_all_asset.Send service get all asset    ${resp_login.json()['message']}   200
+    ${resp_create_new_asset}    create_new_asset.Send service create new asset    ${resp_login.json()['message']}    a007    macbbok air m2    1    true     200
+    ${resp_modify_asset}    modify_asset.Modify asset    ${resp_login.json()['message']}    a007    macbook air m3   2    false    200
+    ${resp_delete_asset}    delete_asset.Delete asset    ${resp_login.json()['message']}    a007    200
 
 TC-001 Verify when input wrong username or password
     common.Create on Session    loginSession    ${Setting}[local_host]
