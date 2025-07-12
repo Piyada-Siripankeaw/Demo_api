@@ -1,6 +1,3 @@
-*** Settings ***
-Library    RequestsLibrary
-Library    Collections
 *** Keywords ***
 
 Create on Session
@@ -42,3 +39,12 @@ Check json data after delete
 Check should be true
     [Arguments]    ${condition}
     Should be true   ${condition} 
+
+Load file json
+    [Arguments]    ${file_name}
+    ${json}    Load Json From File    ${file_name}
+    RETURN    ${json}        
+
+Check should not be empty
+    [Arguments]    ${item}
+    Should Not Be Empty    ${item}    
